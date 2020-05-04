@@ -6,7 +6,10 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        ProduitManager pm = new ProduitManager();
+        WebPageManager webPageManager = new WebPageManager();
+        BitcoinService bitcoinService = new BitcoinService(webPageManager);
+        ProduitManager pm = new ProduitManager(bitcoinService);
+
 
         System.out.println("Bienvenue !");
         while(true){
@@ -22,7 +25,7 @@ public class Main {
             int saisie = scanner.nextInt();
             switch (saisie){
                 case 1:
-                    BitcoinService bitcoinService = new BitcoinService();
+//                    BitcoinService bitcoinService = new BitcoinService();
                     System.out.println("1 BTC = " + bitcoinService.getBitcoinRate() + " €");
                     break;
                 case 2:
