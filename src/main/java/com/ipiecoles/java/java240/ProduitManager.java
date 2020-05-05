@@ -1,13 +1,30 @@
 package com.ipiecoles.java.java240;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@Service
 public class ProduitManager {
 
     private List<Produit> produits = new ArrayList<>();
+
+    @Value("${catalogue.url}")
+    private String catalogueUrl;
+
+    @Autowired
+    private WebPageManager webPageManager;
+
+    @Autowired
+    @Qualifier("cache")
+    private BitcoinService bitcoinService;
 
     /**
      * Méthode qui demande les caractéristiques d'un nouveau produit
@@ -43,7 +60,6 @@ public class ProduitManager {
      * @throws IOException
      */
     public void afficherDetailProduit(Integer index) throws IOException {
-        BitcoinService bitcoinService = new BitcoinService();
         System.out.println(produits.get(index).toString() + ", " + bitcoinService.getBitcoinPrice(produits.get(index).getPrixEuro()) + " BTC");
     }
 
@@ -51,9 +67,9 @@ public class ProduitManager {
      * Méthode qui initialise le catalogue à partir d'un fichier distant.
      * @throws IOException
      */
+    @PostConstruct
     public void initialiserCatalogue() throws IOException {
-        WebPageManager webPageManager = new WebPageManager();
-        String catalogue = webPageManager.getPageContentsFromCacheIfExists("https://pjvilloud.github.io/ipi-java-240-cours/catalogue.txt");
+        String catalogue = webPageManager.getPageContentsFromCacheIfExists(catalogueUrl);
         int nbProduits = 0;
         for(String line : catalogue.split("\n")){
             String[] elements = line.split(";");

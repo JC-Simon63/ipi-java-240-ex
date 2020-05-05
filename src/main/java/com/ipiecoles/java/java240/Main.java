@@ -1,12 +1,17 @@
 package com.ipiecoles.java.java240;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        ProduitManager pm = new ProduitManager();
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringApplication.class);
+        ProduitManager pm = ctx.getBean(ProduitManager.class);
+        BitcoinService bitcoinService = ctx.getBean("cacheBitCoinServiceProperty", BitcoinService.class);
 
         System.out.println("Bienvenue !");
         while(true){
@@ -22,7 +27,6 @@ public class Main {
             int saisie = scanner.nextInt();
             switch (saisie){
                 case 1:
-                    BitcoinService bitcoinService = new BitcoinService();
                     System.out.println("1 BTC = " + bitcoinService.getBitcoinRate() + " €");
                     break;
                 case 2:
